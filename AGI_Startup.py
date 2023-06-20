@@ -114,7 +114,7 @@ def run_conversation(myin):
     ]
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
+        model="gpt-3.5-turbo-0613",    # put "gpt-4-0613" to make use of ChatGPT4   
         messages=messages,
         functions=functions,
         function_call="auto",  # auto is default, but we'll be explicit
