@@ -1,0 +1,4 @@
+{
+    "weatherAPIKey" : "GetYoutWeatherAPIkey_from_http://api.weatherapi.com",
+    "OPENAI_API_KEY" : "Your_openai_API_key"
+}
