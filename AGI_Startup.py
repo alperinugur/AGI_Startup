@@ -73,7 +73,7 @@ def get_weather_replies():
 
 def get_current_time():
     nowtime = datetime.datetime.now()
-    print (nowtime)
+    #print (nowtime)
     return (nowtime)
 
 
