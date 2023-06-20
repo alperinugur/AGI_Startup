@@ -4,13 +4,15 @@ import time
 import requests
 import datetime
 
-global weatherAPIKey
+global weatherAPIKey, ChatGPTModelToUse
 
 with open('.keys.json', 'r') as f:
     paramsNew = json.load(f)
     openai.api_key = paramsNew['OPENAI_API_KEY']
     weatherAPIKey = paramsNew['weatherAPIKey']
 
+
+ChatGPTModelToUse = "gpt-3.5-turbo-0613"    # put "gpt-4-0613" to make use of ChatGPT4   
 
 # Example dummy function hard coded to return the same weather
 # In production, this could be your backend API or an external API
@@ -114,7 +116,7 @@ def run_conversation(myin):
     ]
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",    # put "gpt-4-0613" to make use of ChatGPT4   
+        model=ChatGPTModelToUse,  
         messages=messages,
         functions=functions,
         function_call="auto",  # auto is default, but we'll be explicit
@@ -156,7 +158,7 @@ def run_conversation(myin):
         )  # extend conversation with function response
         time.sleep(1)
         second_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
+            model=ChatGPTModelToUse,
             messages=messages,
         )  # get a new response from GPT where it can see the function response
         return (second_response["choices"][0]["message"]["content"])
