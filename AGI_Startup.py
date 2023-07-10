@@ -154,7 +154,7 @@ if __name__ == '__main__':
             clearmemory()
         elif myin.lower() == "exit":
             exitSave = input ("😎 Save Conversation for next chat?  (Y for Yes) :  ")
-            if exitSave.lower() in {'Y','Yes'}:
+            if exitSave.lower() in {'y','yes'}:
                 with open("messages.json", "w",encoding='utf-8') as outfile:
                     json.dump(messages, outfile)
                 print('👻 AI   : Conversation Saved and will be automatically loaded in next start')
