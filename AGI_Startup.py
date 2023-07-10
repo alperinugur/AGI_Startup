@@ -82,7 +82,7 @@ def function_needed(myin):
         #funcName=response_message["function_call"]["name"]
         try:
             funcArgs= json.loads(response_message["function_call"]["arguments"])
-        finally:
+        except:
             funcArgs = fn["arguments"]
 
         try:
