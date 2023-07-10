@@ -75,10 +75,7 @@ If ChatGPT decides not to use any function, the regular response is returned (pr
 
 Anyone who wish to contribute is welcome. My privilidges are as follows:
 
-  * Remember the complete chat before, so the chat is consistent / DONE
-  * Make a function to create text files, to store what actions were performed (STORE_MEMORY) / DONE
-  * Make a function to read text files, to remember what actions were performed (RECALL_MEMORY) / DONE
-  * Make a function to write / read file, on the users request (i.e. If user prompts "Create a c# code that surfs a webpage and get headers in the webpage, the function will create a file named XXXXX.cs which is a c# / DONE for Python
+   * Catch errors! Code runs good on normal conditions, but error handling is weak!
 
 
 # THANKS 
