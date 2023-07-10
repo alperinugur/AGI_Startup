@@ -293,7 +293,7 @@ def write_python_code_to_file(myin,function_args):
         filename = funcArgs.get("filename")
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
         answer = write_python_code_to_file_DO(filename,code)
-        return (f'{answer}')
+        return (f'{answer}\n\nThe Code is as follows: \n{code}')
     else:
         # messages.append(response_message) 
         return (response_message["content"])
