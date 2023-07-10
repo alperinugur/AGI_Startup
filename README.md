@@ -4,6 +4,7 @@ Startup of an AGI using Chat GPT4 and function / subroutine calling
 #Requirements
 
 Python 3.11.4 (lower versions may be ok)
+
 download and install Git
 
 # INSTALLATION (Windows)
