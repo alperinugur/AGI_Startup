@@ -36,6 +36,13 @@ This way, you can track how much you spend on this code.
 
 Save / Overwrite your .keys.json file
 
+Open a Windows PowerShell window and type in:
+   ```bash
+
+   Set-ExecutionPolicy Unrestricted -Force
+
+   ```
+
 when finished, type the below to run:
    ```bash
    python AGI_Startup.py
