@@ -85,7 +85,8 @@ def function_needed(myin):
             nfuncName = funcArgs['function_name']
         except:
             nfuncName = fn['name']
-            
+
+        print (f'👿 ChatGPT decided to Function to be used: {nfuncName}\n')            
         available_functions = {
                     "get_weather": get_weather,
                     "get_current_time" : get_current_time,
