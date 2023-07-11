@@ -1,5 +1,26 @@
 # AGI_Startup
-Startup of an AGI using Chat GPT4 and function / subroutine calling
+Startup of an AGI using Chat GPT4 and function / subroutine calling.
+
+ <header>The nice thing is you don't have to put all your functions inside your chatGPT function prompt. 
+ 
+ The program first opens a connection to chatGPT and try to understand if the user is willing any function
+ 
+ If YES, then, it sends that function only.
+ 
+ SO you can give hundreds of functions at once.!!</header>
+
+# FEATURES
+
+   * Remember / Save / Load Chat history
+   * Get Weather Data
+   * Get Current Time
+   * Write To File (txt or similar)
+   * Write Python Code to file ( yes! )
+   * Run Python Code (so that you can ask it to run the code it has develeopped)
+   * Read From file (TXT / PDF and similar)
+   * Show Image
+
+   * The functions above are already available. You can just add your function to do whatever you want.
 
 #Requirements
 
