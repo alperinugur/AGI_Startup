@@ -1,102 +1,96 @@
-# AGI_Startup
-Startup of an AGI using ChatGPT 3.5 Turbo / ChatGPT 4 and function / subroutine calling.
+# ChatGPT Function Executor
 
- <header>The nice thing is you don't have to put all your functions inside your chatGPT function prompt. 
- 
- The program first opens a connection to chatGPT and try to understand if the user is willing any function
- 
- If YES, then, it sends that function only.
- 
- SO you can give hundreds of functions at once.!!</header>
+This project is an application that leverages the OpenAI GPT-3.5 or GPT-4 models to execute a list of predefined functions based on user input. The script reads an API key from a JSON file and uses that to authenticate with the OpenAI API. Also if you want to use Weather Data, get your API from www.weatherapi.com
 
-# FEATURES
-
-   * Remember / Save / Load Chat history
-   * Get Weather Data
-   * Get Current Time
-   * Write To File (txt or similar)
-   * Write Python Code to file ( yes! )
-   * Run Python Code (so that you can ask it to run the code it has develeopped)
-   * Read From file (TXT / PDF and similar)
-   * Show Image
-
-   * The functions above are already available. You can just add your function to do whatever you want.
-
-#Requirements
-
-Python 3.11.4 (lower versions may be ok)
-
-download and install Git
-
-# INSTALLATION (Windows)
-
-on a command prompt type following commands:
-   ```bash
-   git clone https://github.com/alperinugur/AGI_Startup
-
-   cd AGI_Startup
-
-   python -m venv venv
-
-   venv\Scripts\activate.bat
-
-   pip3 install -r requirements.txt
-
-   ren .keys.json.template .keys.json
-
-   notepad .keys.json
-  ```
-
-Change the values in .keys.json file to your API KEYS
-
-to get an "weatherAPIKey" use the instructions here :    https://www.weatherapi.com/signup.aspx
-
-to get an "OPENAI_API_KEY" for ChatGPT, create an account here :    [https://platform.openai.com/playground ](https://platform.openai.com/account/api-keys)
-and then create a new secret key. Copy that key, and paste it inside the notepad's OPENAI_API_KEY value. 
-This way, you can track how much you spend on this code.
-
-Save / Overwrite your .keys.json file
-
-Open a Windows PowerShell window and type in:
-   ```bash
-
-   Set-ExecutionPolicy Unrestricted -Force
-
-   ```
-
-when finished, type the below to run:
-   ```bash
-   python AGI_Startup.py
-   ```
-
-# Hints
-Rename keys.json.template as keys.json and put your API keys there.
-
-Follow the below links to create API keys if you don't have:
-
-OPEN AI API KEY:  https://platform.openai.com/account/api-keys
-
-WeatherAPI API KEY: https://www.weatherapi.com/signup.aspx
-
-# Features
-
-The code allows you to chat with the ChatGPT3 / ChatGPT4 and call functions if chatGPT finds it necessary.
-
-This is a simple demonstration of what the function calling in ChatGPT is..
-
-# What it does
-
-User prompt asks for a user input.
-The input is sent to ChatGPT (function call enabled)
-If ChatGPT decides it has to look on the date/time or weather in somewhere, it calls the matching function. The response of the matching function is sent to ChatGPT again, to make an reasonable reply on the content.
-
-If ChatGPT decides not to use any function, the regular response is returned (printed on the terminal window) to user.
-
-# IDEAS
-
-Anyone who wish to contribute is welcome. My privilidges are as follows:
-
-   * Catch errors! Code runs good on normal conditions, but error handling is weak!
+This project serves as a conversational interface that can execute a list of predefined functions, powered by the advanced AI capabilities of OpenAI's GPT-3.5 or GPT-4 models. Leveraging a chat-based format, the script dynamically reads user input and maps it to a relevant function to perform the requested operation. To facilitate secure interactions with OpenAI's API, the script reads an API key from a local JSON file for authentication. This application showcases an innovative way to harness the power of AI, creating a seamless blend of human-computer interaction and automated task execution. From fetching the current weather, writing to a file, reading from a file, to running Python code, this script demonstrates a fascinating use case of AI in automating task-oriented conversations.
 
 
-# THANKS 
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+* You have installed Python 3.6 or later.
+* You have a basic understanding of Python programming language.
+* You have obtained an API key from OpenAI.
+* You have obtained an API key from weatherapi. (optional)
+
+## Getting Started
+
+THE CODE IS ABLE TO RUN PYTHON CODES on the "./codes folder" if you ask it to. So be careful and use it on your own risk!
+
+First, clone the repository to your local machine:
+
+```
+git clone https://github.com/alperinugur/AGI_Startup
+```
+
+After you clone the repository, navigate to the project directory:
+
+```
+cd AGI_Startup
+```
+
+## Configuration
+
+You must provide your OpenAI API key to be able to interact with the ChatGPT models. You should save your API key in a JSON file named '.keys.json'. It should be structured as follows:
+
+```json
+{
+    "weatherAPIKey" : "your_weather_api_key",
+    "OPENAI_API_KEY": "your_openai_api_key"
+}
+```
+
+Please replace "your_openai_api_key" with your actual API key. 
+
+## Functions
+
+The available function list consists of:
+
+- `get_weather`
+- `get_current_time`
+- `write_to_file`
+- `write_python_code_to_file`
+- `read_from_file`
+- `show_image`
+- `run_python_code`
+
+Each function needs to be defined in `all_functions.py`.
+
+## Usage
+
+To start using the application, run:
+
+```
+python3 AGI_Startup.py
+```
+
+You will see an input prompt where you can enter your message or command. Available commands include:
+
+- `cls`: Clears the console.
+- `save`: Saves the current conversation to 'messages.json'.
+- `load`: Loads the conversation history from 'messages.json'.
+- `new`: Clears the current conversation in memory.
+- `exit`: Exits the application. You'll be prompted to save the current conversation before exiting.
+- `dump`: Prints out the current conversation.
+
+The application will prompt you for input, which will be processed by the ChatGPT model to select the appropriate function from the available list to execute.
+
+## Error Handling
+
+The application also contains error handling for cases where the context length is exceeded, which could occur if the conversation history becomes too large.
+
+## Contributing to ChatGPT Function Executor
+
+To contribute to ChatGPT Function Executor, follow these steps:
+
+1. Fork the repository.
+2. Create a new branch: `git checkout -b <branch_name>`.
+3. Make your changes and commit them: `git commit -m '<commit_message>'`
+4. Push to the original branch: `git push origin <project_name>/<location>`
+5. Create the pull request.
+
+Alternatively, see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
+
+## License
+
+This project uses the following license: [MIT License](https://opensource.org/licenses/MIT).
