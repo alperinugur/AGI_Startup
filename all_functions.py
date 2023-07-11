@@ -333,7 +333,7 @@ def get_weather(myin, function_args):
     else:
         return (response_message["content"])
 
-def get_weather_DO(location, unit="celcius"):
+def get_weather_DO(location = 'Istanbul', unit="celcius"):
     api_key = weatherAPIKey
     base_url = "http://api.weatherapi.com/v1/current.json"
     ReplyText = get_weather_replies()

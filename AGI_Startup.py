@@ -38,8 +38,7 @@ def function_needed(myin):
                     "properties": {
                         "function_name": {
                             "type": "string",
-                            "description": "Name of the function to use",
-                        },
+                            "enum": ["get_weather","get_current_time","write_to_file","write_python_code_to_file","read_from_file","show_image","run_python_code"]},
                     },
                     "required": ["function_name"],
                 },
@@ -135,13 +134,27 @@ def clearmemory():
     messages.append ({"role": "assistant", "content": f'Ok. It is {dt}'})
     print('\nConversations Cleared From Memory.\nType SAVE if you want to clear from Disk.')
 
+def handle_exit():
+    exitSave = ""
+    i=0
+    while exitSave == "":
+        i+=1
+        exitSave = input ("😎 Save Conversation for next chat?  (Y for Yes) :  ")
+        if i >2: exitSave = "N"
+    if exitSave.lower() in {'y','yes'}:
+        with open("messages.json", "w",encoding='utf-8') as outfile:
+            json.dump(messages, outfile)
+        print('👻 AI   : Conversation Saved and will be automatically loaded in next start')
+    else:
+        print('👿 AI   : Conversation Discarded')
+    exit()
 
 if __name__ == '__main__':
     initialize()
     while True:
         myin = input ("😎 User : ")
-        if len(myin)<3:
-            exit()
+        if len(myin)<3 or myin.lower() == "exit":
+            handle_exit()
         elif myin.lower() == "cls": 
             cls()
         elif myin.lower() == "save":
@@ -152,16 +165,6 @@ if __name__ == '__main__':
                 messages = json.load(openfile)
         elif myin.lower() == "new":
             clearmemory()
-        elif myin.lower() == "exit":
-            exitSave = input ("😎 Save Conversation for next chat?  (Y for Yes) :  ")
-            if exitSave.lower() in {'y','yes'}:
-                with open("messages.json", "w",encoding='utf-8') as outfile:
-                    json.dump(messages, outfile)
-                print('👻 AI   : Conversation Saved and will be automatically loaded in next start')
-            else:
-                print('👿 AI   : Conversation Discarded')
-
-            exit()
         elif myin.lower() =="dump":
             try:
                 for message in messages:
