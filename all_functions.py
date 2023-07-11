@@ -287,13 +287,14 @@ def write_python_code_to_file(myin,function_args):
             funcArgs= json.loads(response_message["function_call"]["arguments"])
         except:
             funcArgsA= json.dumps(response_message["function_call"]["arguments"])
+            funcArgsA = funcArgsA.replace(r'\\', '')
             funcArgs = json.loads(funcArgsA)
 
         code = funcArgs.get("code")
         filename = funcArgs.get("filename")
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
         answer = write_python_code_to_file_DO(filename,code)
-        return (f'{answer}\n\nThe Code is as follows: \n{code}')
+        return (f'\nThe Code is as follows: \n{code}\n\n{answer}\n')
     else:
         # messages.append(response_message) 
         return (response_message["content"])
