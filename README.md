@@ -1,5 +1,5 @@
 # AGI_Startup
-Startup of an AGI using Chat GPT4 and function / subroutine calling.
+Startup of an AGI using ChatGPT 3.5 Turbo / ChatGPT 4 and function / subroutine calling.
 
  <header>The nice thing is you don't have to put all your functions inside your chatGPT function prompt. 
  
