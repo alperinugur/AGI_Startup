@@ -56,11 +56,11 @@ def get_function_to_use(function_name):
             "properties": {
             "code": {
                 "type":"string",
-                "description":"the code to write to file",
+                "description":"raw format of code to write directly to file",
         },
             "filename": {
                 "type":"string",
-                "description":"Name of the file to create. If none use a max 20 characters name to describe the py file.",
+                "description":"Name of the python file.",
         },
             },
             "required" : ["code","filename"],
@@ -285,12 +285,17 @@ def write_python_code_to_file(myin,function_args):
         funcName=response_message["function_call"]["name"]
         try:
             funcArgs= json.loads(response_message["function_call"]["arguments"])
-        except:
+        except:  #need help in here, as sometimes the code is recieved as a text file, and I could not find a good way to format it to save as a code that is working.
             funcArgsA= json.dumps(response_message["function_call"]["arguments"])
-            funcArgsA = funcArgsA.replace(r'\\', '')
+            funcArgsA = funcArgsA.replace(r'\\n', '')
+            funcArgsA = funcArgsA.replace(r'\\"', '"')
             funcArgs = json.loads(funcArgsA)
 
-        code = funcArgs.get("code")
+        try:
+            code = funcArgs.get("code")
+        except:
+            code = str(funcArgs)
+            
         filename = funcArgs.get("filename")
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
         answer = write_python_code_to_file_DO(filename,code)
@@ -303,7 +308,7 @@ def write_python_code_to_file_DO(filename,code):
     try:
         with open(f'.codes/{filename}', 'w') as f:
             f.write(code)
-        return (f'File written as {filename}.')
+        return (f'👻 File written as {filename}.')
     except:
         return (f'Something went wrong on saving: {filename}.\n\n The Code is like this: \n\n{code}\n')
 

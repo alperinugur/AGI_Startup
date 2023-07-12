@@ -24,14 +24,14 @@ def function_needed(myin):
     function_selector_fn = [
             {
                 "name": "function_selector",
-                "description": """Gets the function_name from the available function list only: 
-                                'get_weather'
-                                'get_current_time'
-                                'write_to_file'
-                                'write_python_code_to_file'
-                                'read_from_file'
-                                'show_image'
-                                'run_python_code'
+                "description": """Gets the function_name from the available function list only. Available functions:
+                                {'get_weather',
+                                'get_current_time',
+                                'write_to_file',
+                                'write_python_code_to_file',
+                                'read_from_file',
+                                'show_image',
+                                'run_python_code'}
                                 """,
                 "parameters": {
                     "type": "object",
@@ -47,7 +47,8 @@ def function_needed(myin):
         ]
     try:
         response = openai.ChatCompletion.create(
-            model=ChatGPTModelToUse,  
+            model=ChatGPTModelToUse,
+            temperature = 0,
             messages=messages,
             functions=function_selector_fn,
             function_call="auto",  # auto is default, but we'll be explicit
