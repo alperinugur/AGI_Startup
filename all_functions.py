@@ -9,6 +9,8 @@ import os
 
 global weatherAPIKey, ChatGPTModelToUse
 ChatGPTModelToUse = "gpt-3.5-turbo-0613" 
+global CODESPATH
+CODESPATH = '.codes'
 
 with open('.keys.json', 'r') as f:
     params = json.load(f)
@@ -166,14 +168,20 @@ def write_to_file (myin,function_args):
         contents = funcArgs.get("file_contents")
         filename = funcArgs.get("filename")
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
-        return (write_to_file_DO(filename,contents))
+
+        answer = write_to_file_DO(filename,contents)
+        
+     
+        return (f'\nThe written text is as follows: \n{str(contents)}\n\n{filename}\n')
+    
     else:
         #messages.append(response_message) 
         return (response_message["content"])
 
 def write_to_file_DO (filename,content):
+    filename = convert_to_relative_path(filename)
     try:
-        with open(f'.codes/{filename}', 'w',encoding='utf-8') as f:
+        with open(f'{filename}', 'w',encoding='utf-8') as f:
             f.write(content)
         return (f'File written as {filename}.')
     except:
@@ -206,7 +214,7 @@ def read_from_file (myin,function_args):
 def read_from_file_DO (filename,file_type):
     if file_type in {'.txt','txt','text','json'}:
         try:
-            with open(f'.codes/{filename}', 'r',encoding='utf-8') as f:
+            with open(f'{CODESPATH}/{filename}', 'r',encoding='utf-8') as f:
                 contents = f.read()
             return (f'Contents of the file are:\n\n{contents}.')
         except:
@@ -214,7 +222,7 @@ def read_from_file_DO (filename,file_type):
         
     elif file_type in {'.pdf','pdf','adobe pdf'}:
         try:
-            reader = PdfReader(f'.codes/{filename}')
+            reader = PdfReader(f'{CODESPATH}/{filename}')
             # read data from the file and put them into a variable called raw_text
             raw_text = ""
             for i, page in enumerate(reader.pages):
@@ -259,7 +267,7 @@ def show_image (myin,function_args):
 def show_image_DO (filename,file_type):
     if file_type in {'.jpg','.jpeg','jpg','jpeg','png','.png','tif','tiff','.tif','.tiff'}:
         try:
-            image = Image.open(f'.codes/{filename}')
+            image = Image.open(f'{CODESPATH}/{filename}')
             # Display the image
             image.show()
             return (f'image has been shown: {filename}')
@@ -295,7 +303,7 @@ def write_python_code_to_file(myin,function_args):
             code = funcArgs.get("code")
         except:
             code = str(funcArgs)
-            
+
         filename = funcArgs.get("filename")
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
         answer = write_python_code_to_file_DO(filename,code)
@@ -305,8 +313,9 @@ def write_python_code_to_file(myin,function_args):
         return (response_message["content"])
 
 def write_python_code_to_file_DO(filename,code):
+    filename = convert_to_relative_path(filename)
     try:
-        with open(f'.codes/{filename}', 'w') as f:
+        with open(f'{filename}', 'w') as f:
             f.write(code)
         return (f'👻 File written as {filename}.')
     except:
@@ -427,8 +436,7 @@ def run_python_code(myin,function_args):
 
 def run_python_code_DO(code_name,code_args="80"):
     try:
-        result = subprocess.run(['python', f'.\.codes\{code_name}',str(code_args)], capture_output=True, text=True)
-        #result = subprocess.run(['python', f'.\.codes\check_port.py' ], capture_output=True, text=True)
+        result = subprocess.run(['python', f'{CODESPATH}\{code_name}',str(code_args)], capture_output=True, text=True)
         output = result.stdout
         outerr= str(result.stderr)
         return_code = result.returncode
@@ -458,9 +466,29 @@ def updatetokens(response):     # to save the usage of the OpenAI
     with open("tokens.json", "w",encoding='utf-8') as outfile:
         json.dump(oldtokens, outfile)
 
+def convert_to_relative_path(absolute_path):    #HELPER to keep documents in subfolder
+    # Get the current working directory
+    base_path = os.getcwd()
 
+    # Remove the drive letter from the absolute path
+    drive, path = os.path.splitdrive(absolute_path)
 
+    # Remove leading path separators
+    path = path.lstrip(os.path.sep)
+
+    # Append the remaining path after the current directory
+    relative_path = os.path.join(CODESPATH, path)
+
+    # Create the necessary directories
+    directory = os.path.dirname(relative_path)
+    os.makedirs(directory, exist_ok=True)
+
+    return relative_path
 
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
+
+
+if __name__ == '__main__':
+    subprocess.run('venv/scripts/python AGI_Startup.py')
