@@ -7,8 +7,10 @@ from PIL import Image
 import subprocess
 import os
 
-global weatherAPIKey, ChatGPTModelToUse
+global weatherAPIKey, ChatGPTModelToUse, ChatGPT4Model
 ChatGPTModelToUse = "gpt-3.5-turbo-0613" 
+ChatGPT4Model = "gpt-4-0613"
+
 global CODESPATH
 CODESPATH = '.codes'
 
@@ -52,7 +54,11 @@ def get_function_to_use(function_name):
         },
         {
         "name": "write_python_code_to_file",
-        "description": "Write a python code to a file",
+        "description": """Write a python code to a file.
+                Ensure the response can be parsed by Python json.loads.
+                REMEMBER to format your response as JSON, using double quotes ("") around keys and string values, and commas (,) to separate items in arrays and objects. 
+                IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.
+                """,
         "parameters": {
             "type": "object",
             "properties": {
@@ -69,8 +75,12 @@ def get_function_to_use(function_name):
             }
         },
         {
-        "name": "write_to_file",
-        "description": "Write a txt file",
+        "name": "write_to_file.",
+        "description": """Write a txt file.
+                Ensure the response can be parsed by Python json.loads.
+                REMEMBER to format your response as JSON, using double quotes ("") around keys and string values, and commas (,) to separate items in arrays and objects. 
+                IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.
+        """,
         "parameters": {
             "type": "object",
             "properties": {
@@ -80,7 +90,7 @@ def get_function_to_use(function_name):
         },
             "filename": {
                 "type":"string",
-                "description":"Name of the file to create. If none use a max 20 characters name to describe the txt file.",
+                "description":"Name of the file to create. If none use a max 20 characters name to describe the txt file. ",
         },
             },
             "required" : ["code","filename"],
@@ -278,7 +288,7 @@ def show_image_DO (filename,file_type):
 
 def write_python_code_to_file(myin,function_args):
     response = openai.ChatCompletion.create(
-        model=ChatGPTModelToUse,  
+        model=ChatGPT4Model,  
         messages=myin,
         functions=function_args,
         function_call="auto",  # auto is default, but we'll be explicit
@@ -425,18 +435,25 @@ def run_python_code(myin,function_args):
         funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
         code_name = funcArgs.get("code_name")
-        code_args = funcArgs.get("code_args")
+        try:
+            code_args = funcArgs.get("code_args").split()
+        except:
+            try:
+                code_args = str(funcArgs.get("code_args")).split()
+            except:
+                code_args = funcArgs.get("code_args")
+
+            
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
-        weather = run_python_code_DO(code_name,code_args)
-        # print (weather)
-        # messages.append ({"role": "assistant", "content": weather})
-        return(weather)
+        response2 = run_python_code_DO(code_name,code_args)
+        return(response2)
     else:
         return (response_message["content"])
 
 def run_python_code_DO(code_name,code_args="80"):
+
     try:
-        result = subprocess.run(['python', f'{CODESPATH}\{code_name}',str(code_args)], capture_output=True, text=True)
+        result = subprocess.run(['python', f'{CODESPATH}\{code_name}'] + code_args, capture_output=True, text=True)
         output = result.stdout
         outerr= str(result.stderr)
         return_code = result.returncode
