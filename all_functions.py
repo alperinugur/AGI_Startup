@@ -9,7 +9,6 @@ import os
 import time
 import sys
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
 import re
 
 global weatherAPIKey, ChatGPTModelToUse, ChatGPT4Model
@@ -309,22 +308,30 @@ def browse_web_page(myin,function_args ):
         return (response_message["content"])
 
 def browse_web_page_DO(url):
-    page = urlopen(url)
-    html = page.read().decode("utf-8")
-    soup = BeautifulSoup(html, "html.parser")
-    souptext = soup.get_text()
-    souptext = re.sub('\n ','\n',souptext)
-    souptext = re.sub(' \n','\n',souptext)
-    for x in range(150):
-        souptext2 = re.sub('\n\n','\n',souptext)
-        if souptext2 == souptext:
-            break
-        else:
-            souptext = souptext2
-    souptext2 = re.sub('\n','-',souptext2)
-    souptext2 = souptext2[0:2000]
-    return (souptext2)
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        }
+        response = requests.get(url, headers=headers)
+        soup = BeautifulSoup(response.text, "html.parser")
+        souptext = soup.get_text()
+        souptext = re.sub('\n ','\n',souptext)
+        souptext = re.sub(' \n','\n',souptext)
+        for x in range(150):
+            souptext2 = re.sub('\n\n','\n',souptext)
+            souptext2 = re.sub('\t\t','\t',souptext)
+            if souptext2 == souptext:
+                break
+            else:
+                souptext = souptext2
+        souptext2 = re.sub('\n','-',souptext2)
+        souptext2 = re.sub('\t','-',souptext2)
 
+        souptext2 = souptext2[0:2000]
+        return (souptext2)
+    except:
+        return (f'The web page {url} failed to answer')
+    
 def write_to_file (myin,function_args):
     response = openai.ChatCompletion.create(
         model=ChatGPTModelToUse,  
