@@ -4,6 +4,7 @@ This project is an application that leverages the OpenAI GPT-3.5 or GPT-4 models
 
 This project serves as a conversational interface that can execute a list of predefined functions, powered by the advanced AI capabilities of OpenAI's GPT-3.5 or GPT-4 models. Leveraging a chat-based format, the script dynamically reads user input and maps it to a relevant function to perform the requested operation. To facilitate secure interactions with OpenAI's API, the script reads an API key from a local JSON file for authentication. This application showcases an innovative way to harness the power of AI, creating a seamless blend of human-computer interaction and automated task execution. From fetching the current weather, writing to a file, reading from a file, making google searches, to running Python code, this script demonstrates a fascinating use case of AI in automating task-oriented conversations.
 
+## See [Example](https://github.com/alperinugur/AGI_Startup/blob/main/Example_Conversation.md) of a conversation
 
 ## Prerequisites
 
