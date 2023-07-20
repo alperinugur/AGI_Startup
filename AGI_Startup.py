@@ -1,6 +1,7 @@
 import openai
 import json
 import sys
+import time
 
 global  ChatGPTModelToUse
 ChatGPTModelToUse = "gpt-3.5-turbo-0613"    # put "gpt-4-0613" to make use of ChatGPT4   
@@ -11,7 +12,8 @@ ChatGPT4Model = "gpt-4-0613"
 with open('.keys.json', 'r') as f:
     params = json.load(f)
     openai.api_key = params['OPENAI_API_KEY']
-
+    GOOGLE_API_KEY = params['GOOGLE_API_KEY']
+    GOOGLE_SEARCH_ENGINE_ID = params['GOOGLE_SEARCH_ENGINE_ID']
 
 
 
@@ -30,20 +32,21 @@ def function_needed(myin):
             {
                 "name": "function_selector",
                 "description": """Gets the function_name from the available function list only. Available functions:
-                                {'get_weather',
+                                {'get_weather (gets weather information for a city or location)',
                                 'get_current_time',
-                                'write_to_file',
-                                'write_python_code_to_file',
-                                'read_from_file',
-                                'show_image',
-                                'run_python_code'}
+                                'write_to_file (writes to a file on disk)',
+                                'write_python_code_to_file (generates the python code and saves it to disk)',
+                                'read_from_file (reads a file from disk)',
+                                'show_image (shows and image)',
+                                'run_python_code (runs a pyhton code from the saved file.)',
+                                'search_in_google (used if a question asked that assistant cannot know because the question is about something in present time)'}
                                 """,
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "function_name": {
                             "type": "string",
-                            "enum": ["get_weather","get_current_time","write_to_file","write_python_code_to_file","read_from_file","show_image","run_python_code"]},
+                            "enum": ["get_weather","get_current_time","write_to_file","write_python_code_to_file","read_from_file","show_image","run_python_code","search_in_google"]},
                     },
                     "required": ["function_name"],
                 },
@@ -63,10 +66,10 @@ def function_needed(myin):
         exception_code = exc_obj.code
         print("Exception code:", exception_code)
         if exception_code == "context_length_exceeded":
-            print (f"OLD:\n{messages}")
+            # print (f"OLD:\n{messages}")
             messages= messages[2:]
             messages = messages[:-1]
-            print (f"NEW:\n{messages}")
+            # print (f"NEW:\n{messages}")
             return ("OPENAI_ERROR_TOO_MUCH_CONV")
         else:
             messages = messages[:-1]
@@ -95,7 +98,8 @@ def function_needed(myin):
         except:
             nfuncName = fn['name']
 
-        print (f'👿 ChatGPT decided to Function to be used: {nfuncName}\n')            
+        print (f'👿 ChatGPT decided to Function to be used: {nfuncName}\n')        
+        time.sleep(1)    
         available_functions = {
                     "get_weather": get_weather,
                     "get_current_time" : get_current_time,
@@ -104,6 +108,7 @@ def function_needed(myin):
                     "read_from_file" : read_from_file,
                     "show_image":show_image,
                     "run_python_code":run_python_code,
+                    "search_in_google":search_in_google,
                 }
         if nfuncName not in available_functions:
             return (f'No corresponding function: {nfuncName}')
@@ -172,17 +177,32 @@ if __name__ == '__main__':
         elif myin.lower() == "new":
             clearmemory()
         elif myin.lower() =="dump":
+            print(f'\n===================== DUMP  START =======================')
             try:
+                i=0
                 for message in messages:
-                    print (f"{message['role'].ljust(14)}: {message['content']}")
+                    i+=1
+                    if message['role']=='assistant':
+                        print (f"\033[92m👻 {message['role'].ljust(14)}: {message['content']}\033[00m")
+                    else:
+                        print (f"\033[96m😎 {message['role'].ljust(14)}: {message['content']}\033[00m")
+                print(f'\n===================== DUMP FINISH ======================')
+                print(f'\nTotal of {i} messages in the memory.')
             except:
                 print (messages)
+                print(f'\n===================== DUMP FINISH ======================')
 
         else:
             # If the message is not a direct command like cls / save / load / new / dump then let's ask ChatGPT
+            tryno = 1
             while True:
                 getresult = function_needed(myin)
                 if getresult != "OPENAI_ERROR_TOO_MUCH_CONV":   # if the input is not too much, then the result is retrieved below
                     print(f'👻 AI   : {getresult}')
                     break
+                else:
+                    tryno +=1
+                    print (f'Reducing the chat size. Trying {tryno}')
+                    time.sleep(1)
+
 

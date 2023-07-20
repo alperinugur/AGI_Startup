@@ -6,6 +6,8 @@ from PyPDF2 import PdfReader
 from PIL import Image
 import subprocess
 import os
+import time
+import sys
 
 global weatherAPIKey, ChatGPTModelToUse, ChatGPT4Model
 ChatGPTModelToUse = "gpt-3.5-turbo-0613" 
@@ -18,6 +20,9 @@ with open('.keys.json', 'r') as f:
     params = json.load(f)
     openai.api_key = params['OPENAI_API_KEY']
     weatherAPIKey = params['weatherAPIKey']
+    GOOGLE_API_KEY = params['GOOGLE_API_KEY']
+    GOOGLE_SEARCH_ENGINE_ID = params['GOOGLE_SEARCH_ENGINE_ID']
+
 
 # '','', 'browse_website', 'interrogate_image' 
 
@@ -75,7 +80,7 @@ def get_function_to_use(function_name):
             }
         },
         {
-        "name": "write_to_file.",
+        "name": "write_to_file",
         "description": """Write a txt file.
                 Ensure the response can be parsed by Python json.loads.
                 REMEMBER to format your response as JSON, using double quotes ("") around keys and string values, and commas (,) to separate items in arrays and objects. 
@@ -133,6 +138,21 @@ def get_function_to_use(function_name):
             }
         },
         {
+        "name": "search_in_google",
+        "description": "Make a google search and get results from the first page",
+        "parameters": {
+            "type": "object",
+            "properties": {
+            "search_string": {
+                "type":"string",
+                "description":"The plain string to search in google. Used if a question asked that assistant cannot know because the question is about something in present time",
+        },
+            },
+            "required" : ["search_string"],
+            }
+        },
+                
+        {
         "name": "run_python_code",
         "description": "Executes a python program (py file) and gets results",
         "parameters": {
@@ -159,6 +179,93 @@ def get_function_to_use(function_name):
 
     return None  # Return None if no matching function_name is found
 
+def search_in_google (myin,function_args):
+    response = openai.ChatCompletion.create(
+        model=ChatGPTModelToUse,  
+        messages=myin,
+        functions=function_args,
+        function_call="auto",  # auto is default, but we'll be explicit
+    )
+    response_message = response["choices"][0]["message"]
+    if response_message.get("function_call"):
+        funcName=response_message["function_call"]["name"]
+        funcArgs= json.loads(response_message["function_call"]["arguments"])
+        search_string = funcArgs.get("search_string")
+        # Write me python code int the file 'ports.py' which checks if port 80 is in use
+        SearchResults = search_in_google_DO(search_string)
+
+        time.sleep(1)
+
+        newq = myin
+        newq.append ({"role": "assistant", "content": json.dumps(SearchResults)})
+        newq.append ({"role": "user", "content": "Based on the google search, please give the answer"})
+
+        HumanUnderstandable = convertGoogleToHuman (newq)
+        return(HumanUnderstandable)
+    
+    else:
+        return (response_message["content"])
+
+def convertGoogleToHuman(myin):
+    while True:
+        try:
+            response = openai.ChatCompletion.create(
+                model=ChatGPTModelToUse,
+                temperature = 0.3,
+                messages=myin
+            )
+            response_message = response["choices"][0]["message"]
+            return (response_message["content"])
+
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            exception_code = exc_obj.code
+            print("Exception code:", exception_code)
+            if exception_code == "context_length_exceeded":
+                # print (f"OLD:\n{messages}")
+                myin= myin[2:]
+                # print (f"NEW:\n{messages}")
+                print ("Decreasing size of chat..")
+            else:
+                # messages = messages[:-1]
+                return ('ERROR CONNECTING TO Chat GPT\n')
+        
+
+def search_in_google_DO( query):
+    try:
+        url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={GOOGLE_SEARCH_ENGINE_ID}&q={query}"
+        response = requests.get(url)
+        data = response.json()
+        results_small = []
+        infoline={
+            "Search Query": query,
+            "Date and Time": get_current_time(),
+            "Number of Results": data["queries"]['request'][0]['totalResults'],
+            "Encoding": data["queries"]['request'][0]['outputEncoding']
+        }
+        results_small.append (infoline)
+        if "items" in data:
+            if "items" in data:
+                for item in data["items"]:
+                    result = {
+                        "title": item["title"],
+                        "link": item["link"],
+                        "snippet": item["snippet"]
+                    }
+                    results_small.append(result)
+            return(results_small)
+        else:
+            results_small.append ( {"SearchResult":"No Results Returned from Google"})
+            return (results_small)
+    except:
+        results_small = []
+        infoline={
+            "Search Query": query,
+            "Date and Time": datetime(),
+            "Result":"Google Connect Error"
+        }
+        return(infoline)
+
 def write_to_file (myin,function_args):
     response = openai.ChatCompletion.create(
         model=ChatGPTModelToUse,  
@@ -180,10 +287,7 @@ def write_to_file (myin,function_args):
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
 
         answer = write_to_file_DO(filename,contents)
-        
-     
         return (f'\nThe written text is as follows: \n{str(contents)}\n\n{filename}\n')
-    
     else:
         #messages.append(response_message) 
         return (response_message["content"])
@@ -502,10 +606,8 @@ def convert_to_relative_path(absolute_path):    #HELPER to keep documents in sub
 
     return relative_path
 
-
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
-
 
 if __name__ == '__main__':
     subprocess.run('venv/scripts/python AGI_Startup.py')
