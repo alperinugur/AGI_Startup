@@ -1,8 +1,8 @@
 # ChatGPT Function Executor
 
-This project is an application that leverages the OpenAI GPT-3.5 or GPT-4 models to execute a list of predefined functions based on user input. The script reads an API key from a JSON file and uses that to authenticate with the OpenAI API. Also if you want to use Weather Data, get your API from www.weatherapi.com
+This project is an application that leverages the OpenAI GPT-3.5 or GPT-4 models to execute a list of predefined functions based on user input. The script reads an API key from a JSON file and uses that to authenticate with the OpenAI API. Also if you want to use Weather Data, or let the ChatGPT do Google Searches, follow below for the websites you can get them for free!
 
-This project serves as a conversational interface that can execute a list of predefined functions, powered by the advanced AI capabilities of OpenAI's GPT-3.5 or GPT-4 models. Leveraging a chat-based format, the script dynamically reads user input and maps it to a relevant function to perform the requested operation. To facilitate secure interactions with OpenAI's API, the script reads an API key from a local JSON file for authentication. This application showcases an innovative way to harness the power of AI, creating a seamless blend of human-computer interaction and automated task execution. From fetching the current weather, writing to a file, reading from a file, to running Python code, this script demonstrates a fascinating use case of AI in automating task-oriented conversations.
+This project serves as a conversational interface that can execute a list of predefined functions, powered by the advanced AI capabilities of OpenAI's GPT-3.5 or GPT-4 models. Leveraging a chat-based format, the script dynamically reads user input and maps it to a relevant function to perform the requested operation. To facilitate secure interactions with OpenAI's API, the script reads an API key from a local JSON file for authentication. This application showcases an innovative way to harness the power of AI, creating a seamless blend of human-computer interaction and automated task execution. From fetching the current weather, writing to a file, reading from a file, making google searches, to running Python code, this script demonstrates a fascinating use case of AI in automating task-oriented conversations.
 
 
 ## Prerequisites
@@ -10,12 +10,14 @@ This project serves as a conversational interface that can execute a list of pre
 Before you begin, ensure you have met the following requirements:
 * You have installed Python 3.6 or later.
 * You have a basic understanding of Python programming language.
-* You have obtained an API key from OpenAI.
-* You have obtained an API key from weatherapi. (optional)
+* You have obtained an API key from OpenAI. (Mandatory!)  <http://api.weatherapi.com>
+* You have obtained an API key from weatherapi. (optional) <http://api.weatherapi.com>
+* You have obtained an API key from google. (if you want to use the google search function) <https://console.cloud.google.com/apis/credentials>
+* You have obtained an Search Engine ID from google. (if you want to use the google search function) <https://programmablesearchengine.google.com>
 
 ## Getting Started
 
-THE CODE IS ABLE TO RUN PYTHON CODES on the "./codes folder" if you ask it to. So be careful and use it on your own risk!
+THE CODE IS ABLE TO RUN PYTHON CODES on the "./codes" folder if you ask it to. So be careful and use it on your own risk!
 
 First, clone the repository to your local machine:
 
@@ -29,13 +31,25 @@ After you clone the repository, navigate to the project directory:
 cd AGI_Startup
 ```
 
+Create an environment (Recommended), and enable it:
+
+```
+python -m venv venv
+venv\scripts\activate.bat
+```
+
+Install Requirements
+```
+(venv) C:\Users\Name\AGI_Startup> pip install -r requirements.txt
+```
+
 ## Configuration
 
 You must provide your OpenAI API key to be able to interact with the ChatGPT models. You should save your API key in a JSON file named '.keys.json'. It should be structured as follows:
 
 ```json
 {
-    "weatherAPIKey" : "GetYoutWeatherAPIkey_from_http://api.weatherapi.com",
+    "weatherAPIKey" : "GetYoutWeatherAPIkey_from http://api.weatherapi.com",
     "OPENAI_API_KEY" : "Your_openai_API_key from https://platform.openai.com/account/api-keys",
     "GOOGLE_API_KEY" : "Your Google API Key from https://console.cloud.google.com/apis/credentials",
     "GOOGLE_SEARCH_ENGINE_ID" : "Google Search Engine ID From https://programmablesearchengine.google.com"
@@ -43,6 +57,14 @@ You must provide your OpenAI API key to be able to interact with the ChatGPT mod
 ```
 
 Please replace "your_openai_api_key" with your actual API key. 
+
+There is a .keys.json.template file, you can rename it to ".keys.json" and replace your keys with placeholders.
+
+To run the program, you can use Visual Studio Code (or any other software), or after enabling the env (venv):
+```
+venv\scripts\activate.bat
+python.exe AGI_Startup.py
+```
 
 ## Functions
 
@@ -55,8 +77,9 @@ The available function list consists of:
 - `read_from_file`
 - `show_image`
 - `run_python_code`
+- `search_in_google`    ** Newly added feature. Searches google, and gets the first page results..
 
-Each function needs to be defined in `all_functions.py`.
+Each function is defined in `all_functions.py` file, and you can easily create your own functions.
 
 ## Usage
 
