@@ -39,14 +39,16 @@ def function_needed(myin):
                                 'read_from_file (reads a file from disk)',
                                 'show_image (shows and image)',
                                 'run_python_code (runs a pyhton code from the saved file.)',
-                                'search_in_google (used if a question asked that assistant cannot know because the question is about something in present time)'}
+                                'search_in_google (used if a question asked that assistant cannot know because the question is about something in present time)',
+                                'browse_web_page (browse a web page to get its contents in plain without links and formattings)
+                                }
                                 """,
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "function_name": {
                             "type": "string",
-                            "enum": ["get_weather","get_current_time","write_to_file","write_python_code_to_file","read_from_file","show_image","run_python_code","search_in_google"]},
+                            "enum": ["get_weather","get_current_time","write_to_file","write_python_code_to_file","read_from_file","show_image","run_python_code","search_in_google","browse_web_page"]},
                     },
                     "required": ["function_name"],
                 },
@@ -111,6 +113,7 @@ def function_needed(myin):
                     "show_image":show_image,
                     "run_python_code":run_python_code,
                     "search_in_google":search_in_google,
+                    "browse_web_page" : browse_web_page,
                 }
         if nfuncName not in available_functions:
             return (f'No corresponding function: {nfuncName}')

@@ -8,6 +8,9 @@ import subprocess
 import os
 import time
 import sys
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import re
 
 global weatherAPIKey, ChatGPTModelToUse, ChatGPT4Model
 ChatGPTModelToUse = "gpt-3.5-turbo-0613" 
@@ -151,7 +154,20 @@ def get_function_to_use(function_name):
             "required" : ["search_string"],
             }
         },
-                
+        {
+        "name": "browse_web_page",
+        "description": "Browse a webpage and get its contents in plain text",
+        "parameters": {
+            "type": "object",
+            "properties": {
+            "full_url": {
+                "type":"string",
+                "description":"The full url of the webpage to get contents",
+        },
+            },
+            "required" : ["full_url"],
+            }
+        },
         {
         "name": "run_python_code",
         "description": "Executes a python program (py file) and gets results",
@@ -230,7 +246,6 @@ def convertGoogleToHuman(myin):
                 # messages = messages[:-1]
                 return ('ERROR CONNECTING TO Chat GPT\n')
         
-
 def search_in_google_DO( query):
     try:
         url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={GOOGLE_SEARCH_ENGINE_ID}&q={query}"
@@ -265,6 +280,50 @@ def search_in_google_DO( query):
             "Result":"Google Connect Error"
         }
         return(infoline)
+
+def browse_web_page(myin,function_args ):
+    response = openai.ChatCompletion.create(
+        model=ChatGPTModelToUse,  
+        messages=myin,
+        functions=function_args,
+        function_call="auto",  # auto is default, but we'll be explicit
+    )
+    response_message = response["choices"][0]["message"]
+    if response_message.get("function_call"):
+        funcName=response_message["function_call"]["name"]
+        funcArgs= json.loads(response_message["function_call"]["arguments"])
+        web_url = funcArgs.get("full_url")
+        # Write me python code int the file 'ports.py' which checks if port 80 is in use
+        WebContents = browse_web_page_DO(web_url)
+
+        time.sleep(1)
+
+        newq = myin
+        newq.append ({"role": "assistant", "content": json.dumps(WebContents)})
+        newq.append ({"role": "user", "content": "Based on the web page contents, what you say?"})
+
+        HumanUnderstandable = convertGoogleToHuman (newq)
+        return(HumanUnderstandable)
+    
+    else:
+        return (response_message["content"])
+
+def browse_web_page_DO(url):
+    page = urlopen(url)
+    html = page.read().decode("utf-8")
+    soup = BeautifulSoup(html, "html.parser")
+    souptext = soup.get_text()
+    souptext = re.sub('\n ','\n',souptext)
+    souptext = re.sub(' \n','\n',souptext)
+    for x in range(150):
+        souptext2 = re.sub('\n\n','\n',souptext)
+        if souptext2 == souptext:
+            break
+        else:
+            souptext = souptext2
+    souptext2 = re.sub('\n','-',souptext2)
+    souptext2 = souptext2[0:2000]
+    return (souptext2)
 
 def write_to_file (myin,function_args):
     response = openai.ChatCompletion.create(
