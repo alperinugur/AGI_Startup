@@ -35,8 +35,10 @@ You must provide your OpenAI API key to be able to interact with the ChatGPT mod
 
 ```json
 {
-    "weatherAPIKey" : "your_weather_api_key",
-    "OPENAI_API_KEY": "your_openai_api_key"
+    "weatherAPIKey" : "GetYoutWeatherAPIkey_from_http://api.weatherapi.com",
+    "OPENAI_API_KEY" : "Your_openai_API_key from https://platform.openai.com/account/api-keys",
+    "GOOGLE_API_KEY" : "Your Google API Key from https://console.cloud.google.com/apis/credentials",
+    "GOOGLE_SEARCH_ENGINE_ID" : "Google Search Engine ID From https://programmablesearchengine.google.com"
 }
 ```
 
