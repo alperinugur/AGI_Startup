@@ -1,6 +1,6 @@
 {
-    "weatherAPIKey" : "GetYoutWeatherAPIkey_from_http://api.weatherapi.com",
-    "OPENAI_API_KEY" : "Your_openai_API_key from https://platform.openai.com/account/api-keys"
-    "GOOGLE_API_KEY" : "Your Google API Key from https://console.cloud.google.com/apis/credentials",
-    "GOOGLE_SEARCH_ENGINE_ID" : "Google Search Engine ID From https://programmablesearchengine.google.com"
+    "weatherAPIKey" : "Your_Weather_API_key",
+    "OPENAI_API_KEY" : "Your_openai_API_key",
+    "GOOGLE_API_KEY" : "Your_Google_API_Key",
+    "GOOGLE_SEARCH_ENGINE_ID" : "Your_Google_Search_Engine_ID"
 }
