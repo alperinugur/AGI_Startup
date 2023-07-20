@@ -98,6 +98,8 @@ def function_needed(myin):
         except:
             nfuncName = fn['name']
 
+        if nfuncName.lower() =='python': nfuncName = 'run_python_code'
+
         print (f'👿 ChatGPT decided to Function to be used: {nfuncName}\n')        
         time.sleep(1)    
         available_functions = {
@@ -146,12 +148,15 @@ def clearmemory():
     print('\nConversations Cleared From Memory.\nType SAVE if you want to clear from Disk.')
 
 def handle_exit():
+    print ("\nEXITING\n")
     exitSave = ""
     i=0
     while exitSave == "":
         i+=1
-        exitSave = input ("😎 Save Conversation for next chat?  (Y for Yes) :  ")
-        if i >2: exitSave = "N"
+        if i >3: 
+            exitSave = "N"
+        else:
+            exitSave = input ("😎 Save Conversation for next chat?  (Y for Yes) :  ")
     if exitSave.lower() in {'y','yes'}:
         with open("messages.json", "w",encoding='utf-8') as outfile:
             json.dump(messages, outfile)
@@ -171,9 +176,11 @@ if __name__ == '__main__':
         elif myin.lower() == "save":
             with open("messages.json", "w",encoding='utf-8') as outfile:
                 json.dump(messages, outfile)
+                print("👻 Saved.")
         elif myin.lower() == "load":
             with open('messages.json', 'r',encoding='utf-8') as openfile:
                 messages = json.load(openfile)
+                print("👻 Loaded.")
         elif myin.lower() == "new":
             clearmemory()
         elif myin.lower() =="dump":
