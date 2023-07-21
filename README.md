@@ -11,10 +11,10 @@ This project serves as a conversational interface that can execute a list of pre
 Before you begin, ensure you have met the following requirements:
 * You have installed Python 3.6 or later.
 * You have a basic understanding of Python programming language.
-* You have obtained an API key from OpenAI. (Mandatory!)  <http://api.weatherapi.com>
-* You have obtained an API key from weatherapi. (optional) <http://api.weatherapi.com>
-* You have obtained an API key from google. (if you want to use the google search function) <https://console.cloud.google.com/apis/credentials>
-* You have obtained an Search Engine ID from google. (if you want to use the google search function) <https://programmablesearchengine.google.com>
+* You have obtained an API key from OpenAI. (Mandatory!)  [Get OpenAI Key](https://platform.openai.com/account/api-keys)
+* You have obtained an API key from weatherapi. (optional) [Get WeatherAPI Key](https://www.weatherapi.com/my/)
+* You have obtained an API key from google. (if you want to use the google search function) [Get Google API Key](https://console.cloud.google.com/apis/credentials)
+* You have obtained an Search Engine ID from google. (if you want to use the google search function) [Create Search Engine ID](https://programmablesearchengine.google.com)
 
 ## Getting Started
 
