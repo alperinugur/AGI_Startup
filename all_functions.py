@@ -215,6 +215,7 @@ def search_in_google (myin,function_args):
 
         newq = myin
         newq.append ({"role": "assistant", "content": json.dumps(SearchResults)})
+        # return(json.dumps(SearchResults))  #added for AGI
         newq.append ({"role": "user", "content": "Based on the google search, please give the answer"})
         HumanUnderstandable = convertGoogleToHuman (newq)
         return(HumanUnderstandable)
@@ -294,6 +295,7 @@ def browse_web_page(myin,function_args ):
         time.sleep(1)
 
         newq = myin
+        print (f'\033[91m{WebContents}\033[00m')
         newq.append ({"role": "assistant", "content": json.dumps(WebContents)})
         newq.append ({"role": "user", "content": "Based on the web page contents, what you say?"})
 

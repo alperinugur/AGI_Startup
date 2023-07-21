@@ -48,6 +48,7 @@ def function_needed(myin):
                     "properties": {
                         "function_name": {
                             "type": "string",
+                            "descriptiopn" : "name of the function to use",
                             "enum": ["get_weather","get_current_time","write_to_file","write_python_code_to_file","read_from_file","show_image","run_python_code","search_in_google","browse_web_page"]},
                     },
                     "required": ["function_name"],
@@ -68,10 +69,8 @@ def function_needed(myin):
         exception_code = exc_obj.code
         print("Exception code:", exception_code)
         if exception_code == "context_length_exceeded":
-            # print (f"OLD:\n{messages}")
-            messages= messages[2:]
-            messages = messages[:-1]
-            # print (f"NEW:\n{messages}")
+            messages= messages[2:]      #deleting first 2 messages from messages
+            messages = messages[:-1]    #deleting the last conversation from messages, to prevent duplicate.
             return ("OPENAI_ERROR_TOO_MUCH_CONV")
         else:
             messages = messages[:-1]
@@ -139,18 +138,20 @@ def initialize():
         with open('messages.json', 'r',encoding='utf-8') as openfile:
             messages = json.load(openfile)
     except:
-        dt=get_current_time()
-        messages= ([{"role": "user", "content": f'Now is {dt}'}])
-        messages.append ({"role": "assistant", "content": f'Ok. It is {dt}'})
+        init_messages()
     print(f'👻 Loaded {len(messages)} messages from history. Type dump to see messages.')
 
 def clearmemory():
-    global messages
     cls()
-    dt=get_current_time()
-    messages= ([{"role": "user", "content": f'Now is {dt}'}])
-    messages.append ({"role": "assistant", "content": f'Ok. It is {dt}'})
+    init_messages()
     print('\nConversations Cleared From Memory.\nType SAVE if you want to clear from Disk.')
+
+def init_messages():
+    global messages
+    dt=get_current_time()
+    messages= ([{"role": "user", "content": f'Now is {dt} . Please keep this in mind about when our conversation started.'}])
+    messages.append ({"role": "assistant", "content": f'Ok. It is {dt}'})
+
 
 def handle_exit():
     print ("\nEXITING\n")
@@ -210,7 +211,7 @@ if __name__ == '__main__':
             while True:
                 getresult = function_needed(myin)
                 if getresult != "OPENAI_ERROR_TOO_MUCH_CONV":   # if the input is not too much, then the result is retrieved below
-                    print(f'👻 AI   : {getresult}')
+                    print(f'👻 AI   : \033[92m{getresult}\033[00m')
                     break
                 else:
                     tryno +=1
