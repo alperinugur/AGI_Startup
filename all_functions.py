@@ -12,8 +12,8 @@ from bs4 import BeautifulSoup
 import re
 
 global weatherAPIKey, ChatGPTModelToUse, ChatGPT4Model
-ChatGPTModelToUse = "gpt-3.5-turbo-0613" 
-ChatGPT4Model = "gpt-4-0613"
+ChatGPTModelToUse = "gpt-3.5-turbo" 
+ChatGPT4Model = "gpt-4"
 
 global CODESPATH
 CODESPATH = '.codes'

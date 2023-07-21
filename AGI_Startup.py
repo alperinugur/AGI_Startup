@@ -4,10 +4,10 @@ import sys
 import time
 
 global  ChatGPTModelToUse
-ChatGPTModelToUse = "gpt-3.5-turbo-0613"    # put "gpt-4-0613" to make use of ChatGPT4   
+ChatGPTModelToUse = "gpt-3.5-turbo"    # put "gpt-4-0613" to make use of ChatGPT4   
 
 global  ChatGPT4Model
-ChatGPT4Model = "gpt-4-0613"
+ChatGPT4Model = "gpt-4"
 
 with open('.keys.json', 'r') as f:
     params = json.load(f)
