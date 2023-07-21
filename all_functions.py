@@ -25,183 +25,185 @@ with open('.keys.json', 'r') as f:
     GOOGLE_API_KEY = params['GOOGLE_API_KEY']
     GOOGLE_SEARCH_ENGINE_ID = params['GOOGLE_SEARCH_ENGINE_ID']
 
+JsonFNC = [
+    {
+        "name": "get_weather",
+        "description": "Get the current weather in a given location",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city and country name, e.g. Istanbul, Turkey",
+                },
+                "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+            },
+            "required": ["location"],
+        },
+    },
+    {
+    "name": "get_current_time",
+    "description": "Get the current time",
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "location": {
+            "type":"string",
+            "description":"Location for time, e.g. Istanbul",
+    },
+        },
+        "required" : [],
+        }
+    },
+    {
+    "name": "write_python_code_to_file",
+    "description": """Write a python code to a file.
+            Ensure the response can be parsed by Python json.loads.
+            REMEMBER to format your response as JSON, using double quotes ("") around keys and string values, and commas (,) to separate items in arrays and objects. 
+            IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.
+            """,
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "code": {
+            "type":"string",
+            "description":"raw format of code to write directly to file",
+    },
+        "filename": {
+            "type":"string",
+            "description":"Name of the python file.",
+    },
+        },
+        "required" : ["code","filename"],
+        }
+    },
+    {
+    "name": "write_to_file",
+    "description": """Write a txt file.
+            Ensure the response can be parsed by Python json.loads.
+            REMEMBER to format your response as JSON, using double quotes ("") around keys and string values, and commas (,) to separate items in arrays and objects. 
+            IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.
+    """,
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "file_contents": {
+            "type":"string",
+            "description":"file contents",
+    },
+        "filename": {
+            "type":"string",
+            "description":"Name of the file to create. If none use a max 20 characters name to describe the txt file. ",
+    },
+        },
+        "required" : ["code","filename"],
+        }
+    },
+    {
+    "name": "read_from_file",
+    "description": "Read a file from disk and get contents",
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "file_type": {
+            "type":"string",
+            "description":"file type like .txt or .csv.",
+    },
+        "filename": {
+            "type":"string",
+            "description":"Name of the file to read",
+    },
+        },
+        "required" : ["filename","file_type"],
+        }
+    },
+    {
+    "name": "show_image",
+    "description": "Read an image file from disk and show on screen",
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "file_type": {
+            "type":"string",
+            "description":"file type like .jpg or .png",
+    },
+        "filename": {
+            "type":"string",
+            "description":"Name of the file to read",
+    },
+        },
+        "required" : ["filename","file_type"],
+        }
+    },
+    {
+    "name": "search_in_google",
+    "description": "Make a google search and get results from the first page",
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "search_string": {
+            "type":"string",
+            "description":"The plain string to search in google. Used if a question asked that assistant cannot know because the question is about something in present time",
+    },
+        },
+        "required" : ["search_string"],
+        }
+    },
+    {
+    "name": "browse_web_page",
+    "description": "Browse a webpage and get its contents in plain text",
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "full_url": {
+            "type":"string",
+            "description":"The full url of the webpage to get contents",
+    },
+        },
+        "required" : ["full_url"],
+        }
+    },
+    {
+    "name": "run_python_code",
+    "description": "Executes a python program (py file) and gets results",
+    "parameters": {
+        "type": "object",
+        "properties": {
+        "code_name": {
+            "type":"string",
+            "description":"name of the python file to run (include .py)",
+    },
+        "code_args": {
+            "type":"string",
+            "description":"arguments to pass to python program to run",
+    },
+        },
+        "required" : ["code_name"],
+        }
+    }
 
+
+]
 # '','', 'browse_website', 'interrogate_image' 
 
 def get_function_to_use(function_name):
-    JsonFNC = [
-        {
-            "name": "get_weather",
-            "description": "Get the current weather in a given location",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "location": {
-                        "type": "string",
-                        "description": "The city and country name, e.g. Istanbul, Turkey",
-                    },
-                    "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
-                },
-                "required": ["location"],
-            },
-        },
-        {
-        "name": "get_current_time",
-        "description": "Get the current time",
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "location": {
-                "type":"string",
-                "description":"Location for time, e.g. Istanbul",
-        },
-            },
-            "required" : [],
-            }
-        },
-        {
-        "name": "write_python_code_to_file",
-        "description": """Write a python code to a file.
-                Ensure the response can be parsed by Python json.loads.
-                REMEMBER to format your response as JSON, using double quotes ("") around keys and string values, and commas (,) to separate items in arrays and objects. 
-                IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.
-                """,
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "code": {
-                "type":"string",
-                "description":"raw format of code to write directly to file",
-        },
-            "filename": {
-                "type":"string",
-                "description":"Name of the python file.",
-        },
-            },
-            "required" : ["code","filename"],
-            }
-        },
-        {
-        "name": "write_to_file",
-        "description": """Write a txt file.
-                Ensure the response can be parsed by Python json.loads.
-                REMEMBER to format your response as JSON, using double quotes ("") around keys and string values, and commas (,) to separate items in arrays and objects. 
-                IMPORTANTLY, to use a JSON object as a string in another JSON object, you need to escape the double quotes.
-        """,
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "file_contents": {
-                "type":"string",
-                "description":"file contents",
-        },
-            "filename": {
-                "type":"string",
-                "description":"Name of the file to create. If none use a max 20 characters name to describe the txt file. ",
-        },
-            },
-            "required" : ["code","filename"],
-            }
-        },
-        {
-        "name": "read_from_file",
-        "description": "Read a file from disk and get contents",
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "file_type": {
-                "type":"string",
-                "description":"file type like .txt or .csv.",
-        },
-            "filename": {
-                "type":"string",
-                "description":"Name of the file to read",
-        },
-            },
-            "required" : ["filename","file_type"],
-            }
-        },
-        {
-        "name": "show_image",
-        "description": "Read an image file from disk and show on screen",
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "file_type": {
-                "type":"string",
-                "description":"file type like .jpg or .png",
-        },
-            "filename": {
-                "type":"string",
-                "description":"Name of the file to read",
-        },
-            },
-            "required" : ["filename","file_type"],
-            }
-        },
-        {
-        "name": "search_in_google",
-        "description": "Make a google search and get results from the first page",
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "search_string": {
-                "type":"string",
-                "description":"The plain string to search in google. Used if a question asked that assistant cannot know because the question is about something in present time",
-        },
-            },
-            "required" : ["search_string"],
-            }
-        },
-        {
-        "name": "browse_web_page",
-        "description": "Browse a webpage and get its contents in plain text",
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "full_url": {
-                "type":"string",
-                "description":"The full url of the webpage to get contents",
-        },
-            },
-            "required" : ["full_url"],
-            }
-        },
-        {
-        "name": "run_python_code",
-        "description": "Executes a python program (py file) and gets results",
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "code_name": {
-                "type":"string",
-                "description":"name of the python file to run (include .py)",
-        },
-            "code_args": {
-                "type":"string",
-                "description":"arguments to pass to python program to run",
-        },
-            },
-            "required" : ["code_name"],
-            }
-        }
-
-
-    ]
     for function_data in JsonFNC:
         if function_data["name"] == function_name:
             return function_data
-
     return None  # Return None if no matching function_name is found
 
-def search_in_google (myin,function_args):
+def RunGpt(myin,function_args):
     response = openai.ChatCompletion.create(
         model=ChatGPTModelToUse,  
         messages=myin,
         functions=function_args,
         function_call="auto",  # auto is default, but we'll be explicit
     )
-    response_message = response["choices"][0]["message"]
+    updatetokens(response)
+    return (response["choices"][0]["message"])
+
+def search_in_google (myin,function_args):
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
@@ -214,7 +216,6 @@ def search_in_google (myin,function_args):
         newq = myin
         newq.append ({"role": "assistant", "content": json.dumps(SearchResults)})
         newq.append ({"role": "user", "content": "Based on the google search, please give the answer"})
-
         HumanUnderstandable = convertGoogleToHuman (newq)
         return(HumanUnderstandable)
     
@@ -229,6 +230,7 @@ def convertGoogleToHuman(myin):
                 temperature = 0.3,
                 messages=myin
             )
+            updatetokens(response,'googleToHuman')
             response_message = response["choices"][0]["message"]
             return (response_message["content"])
 
@@ -281,13 +283,7 @@ def search_in_google_DO( query):
         return(infoline)
 
 def browse_web_page(myin,function_args ):
-    response = openai.ChatCompletion.create(
-        model=ChatGPTModelToUse,  
-        messages=myin,
-        functions=function_args,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
-    response_message = response["choices"][0]["message"]
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
@@ -333,25 +329,13 @@ def browse_web_page_DO(url):
         return (f'The web page {url} failed to answer')
     
 def write_to_file (myin,function_args):
-    response = openai.ChatCompletion.create(
-        model=ChatGPTModelToUse,  
-        messages=myin,
-        functions=function_args,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
-    i=0
-    for resps in response["choices"]:
-        i += 1
-        if i>1: print (f'Response {i} :  \n{resps["message"]}\n\n')
-
-    response_message = response["choices"][0]["message"]
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
         contents = funcArgs.get("file_contents")
         filename = funcArgs.get("filename")
         # Write me python code int the file 'ports.py' which checks if port 80 is in use
-
         answer = write_to_file_DO(filename,contents)
         return (f'\nThe written text is as follows: \n{str(contents)}\n\n{filename}\n')
     else:
@@ -368,18 +352,7 @@ def write_to_file_DO (filename,content):
         return (f'Something went wrong on saving: {filename}.\n\n The file is like this: \n\n{content}\n')
 
 def read_from_file (myin,function_args):
-    response = openai.ChatCompletion.create(
-        model=ChatGPTModelToUse,  
-        messages=myin,
-        functions=function_args,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
-    i=0
-    for resps in response["choices"]:
-        i += 1
-        if i>1: print (f'Response {i} :  \n{resps["message"]}\n\n')
-
-    response_message = response["choices"][0]["message"]
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         #funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
@@ -421,18 +394,7 @@ def read_from_file_DO (filename,file_type):
         return (f'Unknown Format: {filename} Filetype:{file_type}.\n\n')
 
 def show_image (myin,function_args):
-    response = openai.ChatCompletion.create(
-        model=ChatGPTModelToUse,  
-        messages=myin,
-        functions=function_args,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
-    i=0
-    for resps in response["choices"]:
-        i += 1
-        if i>1: print (f'Response {i} :  \n{resps["message"]}\n\n')
-
-    response_message = response["choices"][0]["message"]
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         #funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
@@ -457,18 +419,7 @@ def show_image_DO (filename,file_type):
         return (f'Cannot show {file_type} format: {filename} Filetype:{file_type}.\n\n')
 
 def write_python_code_to_file(myin,function_args):
-    response = openai.ChatCompletion.create(
-        model=ChatGPT4Model,  
-        messages=myin,
-        functions=function_args,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
-    i=0
-    for resps in response["choices"]:
-        i += 1
-        if i>1: print (f'Response {i} :  \n{resps["message"]}\n\n')
-
-    response_message = response["choices"][0]["message"]
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         funcName=response_message["function_call"]["name"]
         try:
@@ -502,18 +453,7 @@ def write_python_code_to_file_DO(filename,code):
         return (f'Something went wrong on saving: {filename}.\n\n The Code is like this: \n\n{code}\n')
 
 def get_weather(myin, function_args):
-    response = openai.ChatCompletion.create(
-        model=ChatGPTModelToUse,  
-        messages=myin,
-        functions=function_args,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
-    i=0
-    for resps in response["choices"]:
-        i += 1
-        if i>1: print (f'Response {i} :  \n{resps["message"]}\n\n')
-
-    response_message = response["choices"][0]["message"]
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
@@ -589,18 +529,7 @@ def get_current_time(myin='',function_args=''):
     return (str(nowtime))
 
 def run_python_code(myin,function_args):
-    response = openai.ChatCompletion.create(
-        model=ChatGPTModelToUse,  
-        messages=myin,
-        functions=function_args,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
-    i=0
-    for resps in response["choices"]:
-        i += 1
-        if i>1: print (f'Response {i} :  \n{resps["message"]}\n\n')
-
-    response_message = response["choices"][0]["message"]
+    response_message = RunGpt(myin,function_args)
     if response_message.get("function_call"):
         funcName=response_message["function_call"]["name"]
         funcArgs= json.loads(response_message["function_call"]["arguments"])
@@ -639,12 +568,12 @@ def run_python_code_DO(code_name,code_args="80"):
     except Exception as e:
         return (str(e.args))
 
-def updatetokens(response):     # to save the usage of the OpenAI
+def updatetokens(response , callingfunction = 'function'):     # to save the usage of the OpenAI
     try:
         prompt_tokens=response['usage']['prompt_tokens']
         completion_tokens = response['usage']['completion_tokens']
         total_tokens = response['usage']['total_tokens']
-        tokens = [{"prompt":prompt_tokens, "completion":completion_tokens,"total":total_tokens}]
+        tokens = [{"prompt":prompt_tokens, "completion":completion_tokens,"total":total_tokens, "function":callingfunction}]
         with open('tokens.json', 'r',encoding='utf-8') as openfile:
             oldtokens = json.load(openfile)
     except:

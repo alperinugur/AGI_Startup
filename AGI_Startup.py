@@ -38,7 +38,7 @@ def function_needed(myin):
                                 'write_python_code_to_file (generates the python code and saves it to disk)',
                                 'read_from_file (reads a file from disk)',
                                 'show_image (shows and image)',
-                                'run_python_code (runs a pyhton code from the saved file.)',
+                                'run_python_code (runs a pyhton code from the saved file)',
                                 'search_in_google (used if a question asked that assistant cannot know because the question is about something in present time)',
                                 'browse_web_page (browse a web page to get its contents in plain without links and formattings)
                                 }
@@ -94,13 +94,14 @@ def function_needed(myin):
             funcArgs= json.loads(response_message["function_call"]["arguments"])
         except:
             funcArgs = fn["arguments"]
-
         try:
             nfuncName = funcArgs['function_name']
         except:
             nfuncName = fn['name']
 
-        if nfuncName.lower() =='python': nfuncName = 'run_python_code'
+        if nfuncName.lower() =='python': 
+            nfuncName = 'run_python_code'
+            print(f'👿👿 ERROR! Returned "python" as a command.. trying {nfuncName}')
 
         print (f'👿 ChatGPT decided to Function to be used: {nfuncName}\n')        
         time.sleep(1)    
@@ -110,21 +111,22 @@ def function_needed(myin):
                     "write_python_code_to_file" : write_python_code_to_file,
                     "write_to_file" : write_to_file,
                     "read_from_file" : read_from_file,
-                    "show_image":show_image,
+                    "show_image": show_image,
                     "run_python_code":run_python_code,
                     "search_in_google":search_in_google,
                     "browse_web_page" : browse_web_page,
                 }
         if nfuncName not in available_functions:
-            return (f'No corresponding function: {nfuncName}')
-        function_to_call = available_functions[nfuncName]
-        function_interior = get_function_to_use(nfuncName)
-        function_response = function_to_call(
-            myin=messages,
-            function_args=[function_interior],
-        )
-        messages.append ({"role": "assistant", "content": function_response})
-        return(function_response)
+            return (f'👿👿 ERROR! Tried to get function {nfuncName} - but it is not defined..')
+        else:
+            function_to_call = available_functions[nfuncName]
+            function_interior = get_function_to_use(nfuncName)
+            function_response = function_to_call(
+                myin=messages,
+                function_args=[function_interior],
+            )
+            messages.append ({"role": "assistant", "content": function_response})
+            return(function_response)
 
     else:
         messages.append ({"role": "assistant", "content": response_message["content"]})
